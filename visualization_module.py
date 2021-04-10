@@ -50,7 +50,7 @@ class plot3dpc(object):
             self.ax.imshow(self.img)
             plt.show()
             plt.close()
-            self.view.show()
+        self.view.show()
         self.app.exec()
 
     def get_color(self, pc_intensity):
