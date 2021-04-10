@@ -85,11 +85,11 @@ class plot3dpc(object):
             l = ob3d.l
             h = ob3d.h
 
-            r = R.from_euler('xyz', [0, ob3d.ry + np.pi / 2, 0])
+            r = R.from_euler('xyz', [0, ob3d.ry, 0])
             r1 = r.as_matrix()
 
             orientation_3d = np.zeros([2, 3])
-            orientation_3d[1, 2] = ob3d.l
+            orientation_3d[1, 0] = ob3d.l
             orientation_3d[[0,1], 1] = -ob3d.h/2.0
             # rotate and translate in camera coordinate system, project in image
             orientation_3d = np.matmul(r1, orientation_3d.T).T
@@ -100,13 +100,13 @@ class plot3dpc(object):
 
             for ii in range(8):
                 if ii & 1:
-                    corners[ii, 2] = c[2] + l / 2.0
+                    corners[ii, 2] = c[2] + w / 2.0
                 else:
-                    corners[ii, 2] = c[2] + -l / 2.0
+                    corners[ii, 2] = c[2] + -w / 2.0
                 if ii & 2:
-                    corners[ii, 0] = c[0] + w / 2.0
+                    corners[ii, 0] = c[0] + l / 2.0
                 else:
-                    corners[ii, 0] = c[0] + -w / 2.0
+                    corners[ii, 0] = c[0] + -l / 2.0
                 if ii & 4:
                     corners[ii, 1] = c[1] + 0
                 else:
