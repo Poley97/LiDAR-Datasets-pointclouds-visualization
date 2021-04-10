@@ -139,7 +139,7 @@ class Calibration(object):
         :return: Coordinates in ref coordinate system
         """
         pts_3d_velo = self.cart2hom(pts_3d_velo)  # nx4
-        return np.matmul(self.get_V2C(), pts_3d_velo).T
+        return np.matmul(self.get_V2C(), pts_3d_velo.T).T
 
     def project_ref_to_velo(self, pts_3d_ref):
         """
