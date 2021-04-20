@@ -19,6 +19,7 @@ class plot3dpc(object):
         self.figure, self.ax = plt.subplots()
         glLineWidth(3)
         self.view.addItem(self.coord)
+        self.view.setWindowTitle('3D visualization')
 
     def set_img(self, img):
         self.img = img
