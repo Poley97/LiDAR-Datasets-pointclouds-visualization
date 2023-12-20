@@ -5,9 +5,9 @@ import argparse
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--dataset_path', type=str, default='D:\DataSet\KITTI_LIDAR', help='Path of KITTI dataset')
+        '--dataset_path', type=str, default='D:\Datasets\kitti_lidar', help='Path of KITTI dataset')
     parser.add_argument(
-        '--file_index', type=int, default=7352, help='Which file you want to display')
+        '--file_index', type=int, default=1, help='Which file you want to display')
 
     opt = parser.parse_args()
     data = kitti_data(opt.dataset_path)

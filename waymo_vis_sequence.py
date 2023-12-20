@@ -58,7 +58,7 @@ def waymo_vis(opt):
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--filepath', type=str, default='C:/Users/lenovo/Desktop/kitti-3d-visual/data/Waymo/segment-10017090168044687777_6380_000_6400_000_with_camera_labels.tfrecord',
+        '--filepath', type=str, default='D:/Datasets/waymo-part/ssegment-10023947602400723454_1120_000_1140_000_with_camera_labels.tfrecord',
             help='The data you want to do visualization')
     parser.add_argument(
         '--maxfps', type=int, default=10,
@@ -67,7 +67,7 @@ if __name__=='__main__':
         '--start_frame', type=int, default=0,
             help='where the visualization started from')
     parser.add_argument(
-        '--end_frame', type=int, default=50,
+        '--end_frame', type=int, default=10,
             help='where the visualization ended at')
 
     opt = parser.parse_args()

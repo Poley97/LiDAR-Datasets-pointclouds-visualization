@@ -21,7 +21,7 @@ class plot3dpc(object):
         self.coord = gl.GLAxisItem()
         self.coord.setSize(5, 5, 5)
         self.figure, self.ax = plt.subplots()
-        glLineWidth(3)
+        # glLineWidth(3)
         self.view.addItem(self.coord)
         self.grid = gl.GLGridItem()
         self.view.addItem(self.grid)
@@ -124,7 +124,7 @@ class plot3dpc(object):
 
 
 
-    def add_line(self, point1, point2):
+    def add_line(self, point1, point2, color=(1, 0, 0, 1)):
         """
         Draw a line
 
@@ -133,11 +133,11 @@ class plot3dpc(object):
         """
         lines = np.stack([point1, point2], axis=0)
         lines_item = gl.GLLinePlotItem(pos=lines, mode='lines',
-                                       color=(1, 0, 0, 1), width=3, antialias=True)
+                                       color=color, width=3, antialias=True)
         self.view.addItem(lines_item)
         return lines_item
 
-    def add_box(self,vertexes):
+    def add_box(self,vertexes ,color=(1, 0, 0, 1)):
         '''
         Draw a box with lines between each pair of vertexes
 
@@ -147,7 +147,7 @@ class plot3dpc(object):
         order_list = [0,1,0,2,3,1,3,2,4,5,4,6,7,5,7,6,0,4,1,5,2,6,3,7,2,7,3,6]
         corners = vertexes[order_list,:]
         box_item = gl.GLLinePlotItem(pos=corners, mode='lines',
-                                       color=(1, 0, 0, 1), width=3, antialias=True)
+                                       color=color, width=3, antialias=True)
         self.view.addItem(box_item)
         return box_item
 
@@ -169,13 +169,13 @@ class plot3dpc(object):
         imax, imin = np.max(pc_intensity), np.min(pc_intensity)
         color_ratio = 2 * (pc_intensity - imin) / (imax - imin)
         colors = np.zeros([pc_intensity.shape[0], 4])
-        colors[:, 1] = np.maximum(1 - color_ratio, 0)
+        colors[:, 2] = np.maximum(1 - color_ratio, 0)
         colors[:, 0] = np.maximum(color_ratio - 1, 0)
-        colors[:, 2] = 1 - colors[:, 1] - colors[:, 2]
+        colors[:, 1] = 1 - colors[:, 1] - colors[:, 2]
         colors[:, 3] = np.ones([pc_intensity.shape[0]])
         return colors
 
-    def covert_3dbox_corner(self, box3d):
+    def covert_3dbox_corner(self, box3d, mode='center'):
         """
         Convert xyzhwl to 8 corners coord
         :param ob3ds: np.array([N*7]),c at center of the box
@@ -208,20 +208,26 @@ class plot3dpc(object):
             else:
                 corners[:,ii, 0] = c[:,0] + -l / 2.0
             if ii & 4:
-                corners[:,ii, 2] = c[:,2] + h/2.0
+                if mode == 'center':
+                    corners[:, ii, 2] = c[:, 2] + h / 2.0
+                elif mode == 'bottom':
+                    corners[:, ii, 2] = c[:, 2] + h
             else:
-                corners[:,ii, 2] = c[:,2] + -h /2.0
+                if mode == 'center':
+                    corners[:, ii, 2] = c[:, 2] + -h / 2.0
+                elif mode == 'bottom':
+                    corners[:, ii, 2] = c[:, 2] + 0
 
         corners = np.matmul(r1, (corners - c[:,None,:]).swapaxes(1,2)).swapaxes(1,2) + c[:,None,:]
         return corners, orientation_3d
 
-    def draw_3d_bbox(self,stacked_corners, stacked_orientation_3d=None):
+    def draw_3d_bbox(self,stacked_corners, stacked_orientation_3d=None, color = (1,0,0,1)):
         for corners in stacked_corners:
-            box = self.add_box(corners)
+            box = self.add_box(corners, color=color)
             self.box_items.append(box)
         if stacked_orientation_3d is not None:
             for orientation in stacked_orientation_3d:
-                ori = self.add_line(orientation[0, :], orientation[1, :])
+                ori = self.add_line(orientation[0, :], orientation[1, :],color=color)
                 self.orientation_items.append(ori)
         pass
 
